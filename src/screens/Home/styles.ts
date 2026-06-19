@@ -4,10 +4,13 @@ import { colors } from '../../theme';
 
 export const styles = StyleSheet.create({
   content: {
+    alignSelf: 'center',
     backgroundColor: colors.surface.app,
     gap: 0,
+    maxWidth: 760,
     padding: 16,
     paddingBottom: 32,
+    width: '100%',
   },
   emptyBox: {
     alignItems: 'center',
@@ -61,6 +64,7 @@ export const styles = StyleSheet.create({
   filterActions: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 14,
   },
   filterGroup: {
@@ -69,6 +73,8 @@ export const styles = StyleSheet.create({
   filterGroupHeader: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
     justifyContent: 'space-between',
   },
   filterLabel: {
@@ -101,6 +107,7 @@ export const styles = StyleSheet.create({
   listIntro: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
     justifyContent: 'space-between',
   },
@@ -131,6 +138,8 @@ export const styles = StyleSheet.create({
   panelHeader: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
     justifyContent: 'space-between',
   },
   paginationFooter: {
@@ -169,6 +178,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 1,
     gap: 2,
+    minWidth: 88,
     minHeight: 74,
     padding: 12,
   },
@@ -179,6 +189,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     flex: 1.4,
     gap: 2,
+    minWidth: 112,
     minHeight: 74,
     padding: 12,
   },
@@ -191,6 +202,7 @@ export const styles = StyleSheet.create({
   },
   summaryRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
   },
   summaryValue: {
@@ -230,6 +242,7 @@ export const styles = StyleSheet.create({
   titleRow: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
     justifyContent: 'space-between',
   },

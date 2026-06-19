@@ -4,9 +4,12 @@ import { colors } from '../../theme';
 
 export const styles = StyleSheet.create({
   content: {
+    alignSelf: 'center',
     gap: 14,
+    maxWidth: 760,
     padding: 16,
     paddingBottom: 18,
+    width: '100%',
   },
   errorBox: {
     backgroundColor: colors.danger.background,
@@ -83,6 +86,7 @@ export const styles = StyleSheet.create({
   heroTopRow: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
     justifyContent: 'space-between',
   },

@@ -25,9 +25,12 @@ export const styles = StyleSheet.create({
     gap: 8,
   },
   content: {
+    alignSelf: 'center',
     gap: 14,
+    maxWidth: 760,
     padding: 16,
     paddingBottom: 32,
+    width: '100%',
   },
   date: {
     color: colors.text.tertiary,
@@ -50,6 +53,7 @@ export const styles = StyleSheet.create({
   detailHeader: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
     justifyContent: 'space-between',
   },
@@ -97,6 +101,8 @@ export const styles = StyleSheet.create({
   topBar: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
     justifyContent: 'space-between',
   },
 });
