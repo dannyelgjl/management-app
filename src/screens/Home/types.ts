@@ -18,16 +18,32 @@ export interface HomeContainer {
   teams: Team[];
   tasks: Task[];
   taskTotal: number;
+  hasNextPage: boolean;
+  isOffline: boolean;
+  isFetchingNextPage: boolean;
   isRefreshing: boolean;
   isInitialLoading: boolean;
   hasTasksError: boolean;
   hasActiveFilters: boolean;
+  pendingSyncCount: number;
   statusOptions: StatusOption[];
   setSearch: (search: string) => void;
   selectStatus: (status?: TaskStatus) => void;
   selectTeam: (teamId?: string) => void;
   clearFilters: () => void;
   refresh: () => void;
+  fetchNextPage: () => void;
+  goToCreateTeam: () => void;
   goToCreateTask: () => void;
+  goToTeams: () => void;
   goToTaskDetails: (taskId: string) => void;
+}
+
+export interface PaginationFooterProps {
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  isVisible: boolean;
+  loadedTotal: number;
+  taskTotal: number;
 }

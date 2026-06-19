@@ -1,10 +1,14 @@
 import { useMemo } from 'react';
+import { useIsMutating } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 
-import { useTasks, useTeams } from '../../hooks/useManagementData';
+import { useInfiniteTasks, useTeams } from '../../hooks/useManagementData';
+import { useNetworkStatus } from '../../hooks/useNetworkStatus';
 import { useTaskFilters } from '../../store/useTaskFilters';
 import { TASK_STATUS_OPTIONS } from '../../utils/status';
 import { HomeContainer, HomeNavigation } from './types';
+
+const TASKS_PAGE_SIZE = 3;
 
 export function useContainer(): HomeContainer {
   const navigation = useNavigation<HomeNavigation>();
@@ -23,18 +27,22 @@ export function useContainer(): HomeContainer {
       search,
       status: selectedStatus,
       teamId: selectedTeamId,
-      limit: 30,
-      offset: 0,
+      limit: TASKS_PAGE_SIZE,
       sort: 'createdAt:desc',
     }),
     [search, selectedStatus, selectedTeamId],
   );
 
   const teamsQuery = useTeams();
-  const tasksQuery = useTasks(filters);
+  const tasksQuery = useInfiniteTasks(filters);
+  const pendingSyncCount = useIsMutating({
+    predicate: (mutation) => mutation.state.isPaused,
+  });
+  const { isOffline } = useNetworkStatus();
   const teams = teamsQuery.data?.data ?? [];
-  const tasks = tasksQuery.data?.data ?? [];
-  const taskTotal = tasksQuery.data?.meta?.total ?? tasks.length;
+  const tasks = tasksQuery.data?.pages.flatMap((page) => page.data) ?? [];
+  const firstTaskPage = tasksQuery.data?.pages[0];
+  const taskTotal = firstTaskPage?.meta?.total ?? tasks.length;
   const selectedTeam = teams.find((team) => team.id === selectedTeamId);
 
   function refresh() {
@@ -58,17 +66,28 @@ export function useContainer(): HomeContainer {
     teams,
     tasks,
     taskTotal,
-    isRefreshing: teamsQuery.isFetching || tasksQuery.isFetching,
+    hasNextPage: Boolean(tasksQuery.hasNextPage),
+    isOffline,
+    isFetchingNextPage: tasksQuery.isFetchingNextPage,
+    isRefreshing:
+      (teamsQuery.isFetching || tasksQuery.isRefetching) &&
+      !tasksQuery.isLoading &&
+      !teamsQuery.isLoading &&
+      !tasksQuery.isFetchingNextPage,
     isInitialLoading: tasksQuery.isLoading || teamsQuery.isLoading,
     hasTasksError: tasksQuery.isError,
     hasActiveFilters: Boolean(search || selectedStatus || selectedTeamId),
+    pendingSyncCount,
     statusOptions: TASK_STATUS_OPTIONS,
     setSearch,
     selectStatus,
     selectTeam,
     clearFilters,
     refresh,
+    fetchNextPage: () => tasksQuery.fetchNextPage(),
+    goToCreateTeam: () => navigation.navigate('TeamForm'),
     goToCreateTask: () => navigation.navigate('TaskForm'),
+    goToTeams: () => navigation.navigate('Teams'),
     goToTaskDetails: (taskId: string) =>
       navigation.navigate('TaskDetails', { taskId }),
   };
