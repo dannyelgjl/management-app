@@ -1,19 +1,53 @@
 import React from 'react';
 import {
-  ActivityIndicator,
-  Pressable,
   ScrollView,
   Text,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Button } from '../../components/Button';
+import { Skeleton } from '../../components/Skeleton';
 import { StatusPill } from '../../components/StatusPill';
 import { TeamChip } from '../../components/TeamChip';
-import { colors } from '../../theme';
 import { formatDate } from '../../utils/date';
 import { styles } from './styles';
 import { useContainer } from './useContainer';
+
+function TaskDetailsSkeleton() {
+  return (
+    <ScrollView contentContainerStyle={styles.content}>
+      <View style={styles.topBar}>
+        <Skeleton width={54} height={18} />
+        <Skeleton width={70} height={42} />
+      </View>
+
+      <View style={styles.card}>
+        <Skeleton width={96} height={28} borderRadius={999} />
+        <Skeleton width="88%" height={34} />
+        <Skeleton width={124} height={14} />
+        <View style={styles.descriptionSkeleton}>
+          <Skeleton height={16} />
+          <Skeleton width="76%" height={16} />
+        </View>
+
+        <View style={styles.section}>
+          <Skeleton width={58} height={14} />
+          <View style={styles.chips}>
+            <Skeleton width={96} height={34} borderRadius={999} />
+            <Skeleton width={112} height={34} borderRadius={999} />
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.actions}>
+        <Skeleton height={48} />
+        <Skeleton height={42} />
+        <Skeleton height={42} />
+      </View>
+    </ScrollView>
+  );
+}
 
 const TaskDetails = () => {
   const {
@@ -35,9 +69,7 @@ const TaskDetails = () => {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.centerBox}>
-          <ActivityIndicator color={colors.brand.primary} />
-        </View>
+        <TaskDetailsSkeleton />
       </SafeAreaView>
     );
   }
@@ -46,14 +78,10 @@ const TaskDetails = () => {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
-          <Pressable onPress={goBack} style={styles.backButton}>
-            <Text style={styles.backButtonText}>Voltar</Text>
-          </Pressable>
+          <Button title="Voltar" onPress={goBack} variant="link" size="compact" fitContent />
           <View style={styles.feedbackBox}>
-            <Text style={styles.feedbackTitle}>Tarefa nao encontrada</Text>
-            <Pressable onPress={retry} style={styles.secondaryButton}>
-              <Text style={styles.secondaryButtonText}>Tentar novamente</Text>
-            </Pressable>
+            <Text style={styles.feedbackTitle}>Tarefa não encontrada</Text>
+            <Button title="Tentar novamente" onPress={retry} size="small" fitContent />
           </View>
         </View>
       </SafeAreaView>
@@ -64,24 +92,25 @@ const TaskDetails = () => {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.topBar}>
-          <Pressable onPress={goBack} style={styles.backButton}>
-            <Text style={styles.backButtonText}>Voltar</Text>
-          </Pressable>
-          <Pressable onPress={goToEdit} style={styles.editButton}>
-            <Text style={styles.editButtonText}>Editar</Text>
-          </Pressable>
+          <Button title="Voltar" onPress={goBack} variant="link" size="compact" />
+          <Button title="Editar" onPress={goToEdit} variant="outline" size="small" />
         </View>
 
         <View style={styles.card}>
-          <StatusPill status={task.status} />
-          <Text style={styles.title}>{task.title}</Text>
-          <Text style={styles.date}>{formatDate(task.dueDate)}</Text>
+          <View style={styles.detailHeader}>
+            <StatusPill status={task.status} />
+            <Text style={styles.date}>{formatDate(task.dueDate)}</Text>
+          </View>
 
-          {task.description ? (
-            <Text style={styles.description}>{task.description}</Text>
-          ) : (
-            <Text style={styles.muted}>Sem descricao cadastrada.</Text>
-          )}
+          <Text style={styles.title}>{task.title}</Text>
+
+          <View style={styles.descriptionBlock}>
+            {task.description ? (
+              <Text style={styles.description}>{task.description}</Text>
+            ) : (
+              <Text style={styles.muted}>Sem descrição cadastrada.</Text>
+            )}
+          </View>
 
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>Times</Text>
@@ -98,42 +127,32 @@ const TaskDetails = () => {
         </View>
 
         <View style={styles.actions}>
-          <Pressable
+          <Button
+            title={`Mudar para ${nextStatusLabel}`}
             disabled={isStatusBusy}
+            loading={isStatusBusy}
             onPress={changeToNextStatus}
-            style={({ pressed }) => [
-              styles.primaryButton,
-              pressed && styles.pressed,
-              isStatusBusy && styles.disabled,
-            ]}>
-            <Text style={styles.primaryButtonText}>
-              Mudar para {nextStatusLabel}
-            </Text>
-          </Pressable>
+          />
 
           {shouldShowDoneButton ? (
-            <Pressable
+            <Button
+              title="Marcar como concluída"
+              variant="success"
+              size="small"
               disabled={isStatusBusy}
+              loading={isStatusBusy}
               onPress={markAsDone}
-              style={({ pressed }) => [
-                styles.doneButton,
-                pressed && styles.pressed,
-                isStatusBusy && styles.disabled,
-              ]}>
-              <Text style={styles.doneButtonText}>Marcar como concluida</Text>
-            </Pressable>
+            />
           ) : null}
 
-          <Pressable
+          <Button
+            title="Excluir tarefa"
+            variant="dangerOutline"
+            size="small"
             disabled={isDeleteBusy}
+            loading={isDeleteBusy}
             onPress={confirmDelete}
-            style={({ pressed }) => [
-              styles.deleteButton,
-              pressed && styles.pressed,
-              isDeleteBusy && styles.disabled,
-            ]}>
-            <Text style={styles.deleteButtonText}>Excluir tarefa</Text>
-          </Pressable>
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

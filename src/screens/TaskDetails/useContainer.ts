@@ -30,7 +30,7 @@ export function useContainer(): TaskDetailsContainer {
         text: 'Excluir',
         style: 'destructive',
         onPress: () =>
-          deleteMutation.mutate(undefined, {
+          deleteMutation.mutate({ taskId }, {
             onSuccess: () => navigation.navigate('Home'),
           }),
       },
@@ -48,8 +48,8 @@ export function useContainer(): TaskDetailsContainer {
     goBack: () => navigation.goBack(),
     goToEdit: () => navigation.navigate('TaskForm', { taskId }),
     retry: () => taskQuery.refetch(),
-    changeToNextStatus: () => statusMutation.mutate(next),
-    markAsDone: () => statusMutation.mutate('DONE'),
+    changeToNextStatus: () => statusMutation.mutate({ status: next, taskId }),
+    markAsDone: () => statusMutation.mutate({ status: 'DONE', taskId }),
     confirmDelete,
   };
 }
