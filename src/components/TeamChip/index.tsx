@@ -1,8 +1,19 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, PressableStateCallbackType, Text, View } from 'react-native';
 
 import { styles } from './styles';
 import { TeamChipProps } from './types';
+
+export function getTeamChipStyle(
+  { pressed }: PressableStateCallbackType,
+  selected?: boolean,
+) {
+  return [
+    styles.container,
+    selected && styles.selectedContainer,
+    pressed && styles.pressed,
+  ];
+}
 
 export function TeamChip({ team, selected = false, onPress }: TeamChipProps) {
   const content = (
@@ -22,11 +33,7 @@ export function TeamChip({ team, selected = false, onPress }: TeamChipProps) {
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.container,
-        selected && styles.selectedContainer,
-        pressed && styles.pressed,
-      ]}>
+      style={(state) => getTeamChipStyle(state, selected)}>
       {content}
     </Pressable>
   );

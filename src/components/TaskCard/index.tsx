@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, PressableStateCallbackType, Text, View } from 'react-native';
 
 import { formatDate } from '../../utils/date';
 import { statusColor } from '../../utils/status';
@@ -20,13 +20,17 @@ function getTeamCountLabel(teamCount: number) {
   return `${teamCount} times`;
 }
 
+export function getTaskCardStyle({ pressed }: PressableStateCallbackType) {
+  return [styles.card, pressed && styles.pressed];
+}
+
 export function TaskCard({ task, onPress }: TaskCardProps) {
   const teamCountLabel = getTeamCountLabel(task.teams.length);
 
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
+      style={getTaskCardStyle}>
       <View
         style={[
           styles.statusAccent,
