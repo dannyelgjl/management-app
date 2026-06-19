@@ -2,43 +2,64 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 import { formatDate } from '../../utils/date';
+import { statusColor } from '../../utils/status';
 import { StatusPill } from '../StatusPill';
 import { TeamChip } from '../TeamChip';
 import { styles } from './styles';
 import { TaskCardProps } from './types';
 
+function getTeamCountLabel(teamCount: number) {
+  if (!teamCount) {
+    return 'Sem time';
+  }
+
+  if (teamCount === 1) {
+    return '1 time';
+  }
+
+  return `${teamCount} times`;
+}
+
 export function TaskCard({ task, onPress }: TaskCardProps) {
+  const teamCountLabel = getTeamCountLabel(task.teams.length);
+
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}>
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.statusAccent,
+          { backgroundColor: statusColor[task.status] },
+        ]}
+      />
+
+      <View style={styles.content}>
+        <View style={styles.metaRow}>
+          <Text style={styles.metaText} numberOfLines={1}>
+            {formatDate(task.dueDate)} · {teamCountLabel}
+          </Text>
+          <StatusPill status={task.status} />
+        </View>
+
         <Text style={styles.title} numberOfLines={2}>
           {task.title}
         </Text>
-        <StatusPill status={task.status} />
+
+        {task.description ? (
+          <Text style={styles.description} numberOfLines={2}>
+            {task.description}
+          </Text>
+        ) : null}
+
+        {task.teams.length ? (
+          <View style={styles.chips}>
+            {task.teams.map((team) => (
+              <TeamChip key={team.id} team={team} />
+            ))}
+          </View>
+        ) : null}
       </View>
-
-      {task.description ? (
-        <Text style={styles.description} numberOfLines={2}>
-          {task.description}
-        </Text>
-      ) : null}
-
-      <View style={styles.footer}>
-        <Text style={styles.date}>{formatDate(task.dueDate)}</Text>
-        <Text style={styles.teamCount}>
-          {task.teams.length ? `${task.teams.length} time(s)` : 'Sem time'}
-        </Text>
-      </View>
-
-      {task.teams.length ? (
-        <View style={styles.chips}>
-          {task.teams.map((team) => (
-            <TeamChip key={team.id} team={team} />
-          ))}
-        </View>
-      ) : null}
     </Pressable>
   );
 }
