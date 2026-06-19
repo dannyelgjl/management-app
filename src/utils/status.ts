@@ -4,13 +4,13 @@ import { colors } from '../theme';
 export const TASK_STATUS_OPTIONS: Array<{ label: string; value: TaskStatus }> = [
   { label: 'Pendente', value: 'PENDING' },
   { label: 'Em progresso', value: 'IN_PROGRESS' },
-  { label: 'Concluida', value: 'DONE' },
+  { label: 'Concluída', value: 'DONE' },
 ];
 
 export const statusLabel: Record<TaskStatus, string> = {
   PENDING: 'Pendente',
   IN_PROGRESS: 'Em progresso',
-  DONE: 'Concluida',
+  DONE: 'Concluída',
 };
 
 export const statusColor: Record<TaskStatus, string> = {

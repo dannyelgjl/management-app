@@ -27,13 +27,55 @@ export function toDateInput(value?: string | null) {
     return '';
   }
 
-  return date.toISOString().slice(0, 10);
+  const [year, month, day] = date.toISOString().slice(0, 10).split('-');
+
+  return `${day}-${month}-${year}`;
 }
 
 export function fromDateInput(value?: string) {
-  if (!value?.trim()) {
+  const trimmedValue = value?.trim();
+
+  if (!trimmedValue) {
     return null;
   }
 
-  return new Date(`${value}T12:00:00.000Z`).toISOString();
+  const [day, month, year] = trimmedValue.split('-');
+
+  return new Date(`${year}-${month}-${day}T12:00:00.000Z`).toISOString();
+}
+
+export function maskDateInput(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 8);
+  const parts = [digits.slice(0, 2), digits.slice(2, 4), digits.slice(4, 8)].filter(
+    Boolean,
+  );
+
+  return parts.join('-');
+}
+
+export function isDateInputValid(value?: string) {
+  const trimmedValue = value?.trim();
+
+  if (!trimmedValue) {
+    return true;
+  }
+
+  const match = /^(\d{2})-(\d{2})-(\d{4})$/.exec(trimmedValue);
+
+  if (!match) {
+    return false;
+  }
+
+  const [, day, month, year] = match;
+  const date = new Date(`${year}-${month}-${day}T12:00:00.000Z`);
+
+  if (Number.isNaN(date.getTime())) {
+    return false;
+  }
+
+  return (
+    date.getUTCFullYear() === Number(year) &&
+    date.getUTCMonth() + 1 === Number(month) &&
+    date.getUTCDate() === Number(day)
+  );
 }
