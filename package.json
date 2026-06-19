@@ -4,17 +4,17 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "android:local": "npm run env:local && react-native run-android",
-    "android:prod": "npm run env:prod && react-native run-android",
+    "android:local": "yarn env:local && react-native run-android",
+    "android:prod": "yarn env:prod && react-native run-android",
     "env:local": "node scripts/apply-env.js local",
     "env:prod": "node scripts/apply-env.js production",
     "ios": "react-native run-ios",
-    "ios:local": "npm run env:local && react-native run-ios",
-    "ios:prod": "npm run env:prod && react-native run-ios",
+    "ios:local": "yarn env:local && react-native run-ios",
+    "ios:prod": "yarn env:prod && react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "start:local": "npm run env:local && react-native start",
-    "start:prod": "npm run env:prod && react-native start",
+    "start:local": "yarn env:local && react-native start",
+    "start:prod": "yarn env:prod && react-native start",
     "test": "jest"
   },
   "dependencies": {

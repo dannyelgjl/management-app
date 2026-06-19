@@ -105,8 +105,8 @@ As URLs ficam em arquivos de ambiente:
 Antes de rodar um build, aplique o ambiente desejado:
 
 ```bash
-npm run env:local
-npm run env:prod
+yarn env:local
+yarn env:prod
 ```
 
 O comando gera `src/config/environment.ts`, que e o arquivo importado pelo cliente Axios. O arquivo `.env.production` ja aponta para a API publicada no Render usada neste desafio.
@@ -201,7 +201,7 @@ curl -X PATCH "http://localhost:3000/api/tasks/{taskId}/status" \
 
 ### 1. Subir backend
 
-Em outro terminal:
+Em outro terminal, no repositorio da API:
 
 ```bash
 git clone https://github.com/dannyelgjl/management-api.git
@@ -217,28 +217,29 @@ npm run start:dev
 
 ### 2. Subir frontend
 
-Neste projeto:
+Neste projeto mobile, use Yarn:
 
 ```bash
 git clone https://github.com/dannyelgjl/management-app.git
 cd management-app
 nvm use
-npm install
+yarn install
 bundle install
 cd ios && bundle exec pod install && cd ..
-npm run start:local -- --reset-cache
-npm run ios:local
+yarn start:local --reset-cache
+yarn ios:local
 ```
 
 ## Scripts
 
-- `npm start`: inicia Metro.
-- `npm run ios`: compila e abre no iOS Simulator.
-- `npm run android`: compila e abre no Android Emulator.
-- `npm test`: roda testes.
-- `npm run lint`: roda ESLint.
-- `npm run env:local`: aplica ambiente local.
-- `npm run env:prod`: aplica ambiente de producao.
+- `yarn start`: inicia Metro.
+- `yarn ios`: compila e abre no iOS Simulator.
+- `yarn android`: compila e abre no Android Emulator.
+- `yarn test`: roda testes.
+- `yarn test --coverage`: roda testes com cobertura.
+- `yarn lint`: roda ESLint.
+- `yarn env:local`: aplica ambiente local.
+- `yarn env:prod`: aplica ambiente de producao.
 
 ## Modelo de dados consumido
 
