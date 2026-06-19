@@ -5,3 +5,8 @@ export interface FilterChipProps extends Omit<PressableProps, 'children' | 'styl
   selected?: boolean;
   style?: StyleProp<ViewStyle>;
 }
+
+export type FilterChipStyleOptions = {
+  selected?: boolean;
+  style?: StyleProp<ViewStyle>;
+};
