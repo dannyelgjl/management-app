@@ -57,3 +57,9 @@ export interface TaskPayload {
   dueDate?: string | null;
   teamIds?: string[];
 }
+
+export interface TeamPayload {
+  name: string;
+  colorHex: string;
+  description?: string;
+}

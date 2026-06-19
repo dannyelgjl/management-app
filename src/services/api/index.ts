@@ -27,5 +27,5 @@ export function getApiErrorMessage(error: unknown) {
     return error.message;
   }
 
-  return 'Nao foi possivel concluir a operacao.';
+  return 'Não foi possível concluir a operação.';
 }
