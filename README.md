@@ -69,6 +69,12 @@ Prints capturados no iOS Simulator com o app apontando para a API de producao.
 | --- | --- | --- |
 | <img src="./docs/screenshots/03-new-team.png" alt="Formulario de novo time com selecao de cor" width="220" /> | <img src="./docs/screenshots/05-teams.png" alt="Tela de gerenciamento de times com editar e excluir" width="220" /> | <img src="./docs/screenshots/04-task-details.png" alt="Detalhe da tarefa com acoes rapidas" width="220" /> |
 
+### Cobertura de testes
+
+Evidencia do comando `yarn test --coverage` com cobertura 100%.
+
+<img src="./docs/screenshots/06-test-coverage.png" alt="Cobertura de testes unitarios em 100%" width="640" />
+
 ## Backend esperado
 
 Este front consome a API em:
