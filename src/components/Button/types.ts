@@ -19,3 +19,11 @@ export interface ButtonProps extends Omit<PressableProps, 'children' | 'style'> 
   title: string;
   variant?: ButtonVariant;
 }
+
+export type ButtonStyleOptions = {
+  fitContent?: boolean;
+  isDisabled: boolean;
+  size: ButtonSize;
+  style?: StyleProp<ViewStyle>;
+  variant: ButtonVariant;
+};

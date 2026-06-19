@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
     borderRadius: 8,
+    flexShrink: 1,
     flexDirection: 'row',
     justifyContent: 'center',
   },
@@ -93,5 +94,6 @@ export const styles = StyleSheet.create({
     color: colors.text.inverted,
     fontSize: 15,
     fontWeight: '900',
+    textAlign: 'center',
   },
 });

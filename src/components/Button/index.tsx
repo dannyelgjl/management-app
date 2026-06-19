@@ -1,9 +1,19 @@
 import React from 'react';
-import { ActivityIndicator, Pressable, Text } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  PressableStateCallbackType,
+  Text,
+} from 'react-native';
 
 import { colors } from '../../theme';
 import { styles } from './styles';
-import { ButtonProps, ButtonSize, ButtonVariant } from './types';
+import {
+  ButtonProps,
+  ButtonSize,
+  ButtonStyleOptions,
+  ButtonVariant,
+} from './types';
 
 const variantStyles: Record<ButtonVariant, object> = {
   danger: styles.danger,
@@ -44,6 +54,21 @@ const indicatorColors: Record<ButtonVariant, string> = {
   success: colors.success.text,
 };
 
+export function getButtonStyle(
+  { pressed }: PressableStateCallbackType,
+  { fitContent, isDisabled, size, style, variant }: ButtonStyleOptions,
+) {
+  return [
+    styles.base,
+    sizeStyles[size],
+    variantStyles[variant],
+    fitContent && styles.fitContent,
+    pressed && styles.pressed,
+    isDisabled && styles.disabled,
+    style,
+  ];
+}
+
 export function Button({
   accessibilityState,
   disabled,
@@ -56,7 +81,7 @@ export function Button({
   variant = 'primary',
   ...props
 }: ButtonProps) {
-  const isDisabled = disabled || loading;
+  const isDisabled = Boolean(disabled || loading);
 
   return (
     <Pressable
@@ -64,15 +89,15 @@ export function Button({
       accessibilityState={{ ...accessibilityState, disabled: isDisabled }}
       accessibilityRole="button"
       disabled={isDisabled}
-      style={({ pressed }) => [
-        styles.base,
-        sizeStyles[size],
-        variantStyles[variant],
-        fitContent && styles.fitContent,
-        pressed && styles.pressed,
-        isDisabled && styles.disabled,
-        style,
-      ]}>
+      style={(state) =>
+        getButtonStyle(state, {
+          fitContent,
+          isDisabled,
+          size,
+          style,
+          variant,
+        })
+      }>
       {loading ? (
         <ActivityIndicator color={indicatorColors[variant]} />
       ) : (
