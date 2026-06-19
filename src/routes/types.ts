@@ -1,5 +1,5 @@
-import { ParamListBase } from '@react-navigation/native';
-
-export interface RootStackParamList extends ParamListBase {
+export type RootStackParamList = {
   Home: undefined;
-}
+  TaskDetails: { taskId: string };
+  TaskForm: { taskId?: string } | undefined;
+};
