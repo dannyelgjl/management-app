@@ -5,6 +5,7 @@ import { colors } from '../../theme';
 export const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
   },
   card: {
@@ -27,9 +28,12 @@ export const styles = StyleSheet.create({
     width: 14,
   },
   content: {
+    alignSelf: 'center',
     backgroundColor: colors.surface.app,
+    maxWidth: 760,
     padding: 16,
     paddingBottom: 32,
+    width: '100%',
   },
   description: {
     color: colors.text.body,
@@ -127,6 +131,7 @@ export const styles = StyleSheet.create({
   titleRow: {
     alignItems: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
     justifyContent: 'space-between',
   },
