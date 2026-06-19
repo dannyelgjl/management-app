@@ -1,4 +1,4 @@
-# Management App
+# Gestão APP
 
 Aplicacao mobile em React Native e TypeScript para gerenciar times e tarefas consumindo a Management API.
 
@@ -22,6 +22,7 @@ O app separa responsabilidades em camadas simples:
 - `src/store`: estado local de filtros da lista.
 - `src/screens`: telas de lista, detalhe e formulario.
 - `src/components`: componentes reutilizaveis de tarefa, status e time.
+- `src/config`: configuracao de ambiente e React Query persistido.
 
 Cada tela segue o mesmo padrao de organizacao:
 
@@ -37,9 +38,14 @@ React Query foi escolhido porque a maior parte do estado vem do backend. Ele sim
 
 O formulario usa `react-hook-form` com `zod` para validar no cliente antes de enviar para a API. A regra principal do desafio, titulo com minimo de 3 caracteres, esta refletida no schema da tela de tarefa.
 
+O app usa cache persistido com AsyncStorage e NetInfo para funcionar offline-first. Consultas ja carregadas ficam disponiveis offline e mutations pausadas sao reenviadas quando a conexao volta.
+
 ## Funcionalidades implementadas
 
-- Lista de times.
+- Lista e gerenciamento de times.
+- Criar time.
+- Editar time.
+- Deletar time.
 - Toque em um time para filtrar tarefas por `teamId`.
 - Lista global e filtrada de tarefas.
 - Filtro por status e busca textual.
@@ -51,12 +57,36 @@ O formulario usa `react-hook-form` com `zod` para validar no cliente antes de en
 - Deletar tarefa.
 - Exibir times como chips com cor.
 
+## Evidencias visuais
+
+Prints capturados no iOS Simulator com o app apontando para a API de producao.
+
+| Lista e filtros | Nova tarefa |
+| --- | --- |
+| <img src="./docs/screenshots/01-home.png" alt="Lista de tarefas com filtros por time e status" width="220" /> | <img src="./docs/screenshots/02-new-task.png" alt="Formulario de nova tarefa com validacao" width="220" /> |
+
+| Novo time | Gerenciar times | Detalhe da tarefa |
+| --- | --- | --- |
+| <img src="./docs/screenshots/03-new-team.png" alt="Formulario de novo time com selecao de cor" width="220" /> | <img src="./docs/screenshots/05-teams.png" alt="Tela de gerenciamento de times com editar e excluir" width="220" /> | <img src="./docs/screenshots/04-task-details.png" alt="Detalhe da tarefa com acoes rapidas" width="220" /> |
+
 ## Backend esperado
 
 Este front consome a API em:
 
 ```text
 http://localhost:3000/api
+```
+
+Em producao, o app esta configurado para:
+
+```text
+https://management-api-y4gi.onrender.com/api
+```
+
+A documentacao Swagger da API publicada esta disponivel em:
+
+```text
+https://management-api-y4gi.onrender.com/api/docs
 ```
 
 No iOS Simulator, `localhost` aponta para a maquina host. No Android Emulator, o app usa `10.0.2.2`.
@@ -73,24 +103,92 @@ npm run env:local
 npm run env:prod
 ```
 
-O comando gera `src/config/environment.ts`, que e o arquivo importado pelo cliente Axios. Para producao, substitua `REPLACE_WITH_RENDER_SERVICE_URL` em `.env.production` pela URL real do web service no Render.
+O comando gera `src/config/environment.ts`, que e o arquivo importado pelo cliente Axios. O arquivo `.env.production` ja aponta para a API publicada no Render usada neste desafio.
 
-O backend usado no desafio esta em:
-
-```text
-/Users/daniel/Documents/management-api
-```
+O backend usado no desafio esta no repositorio [dannyelgjl/management-api](https://github.com/dannyelgjl/management-api).
 
 Endpoints consumidos:
 
 ```text
 GET    /api/teams?limit=&offset=&search=
+GET    /api/teams/:id
+POST   /api/teams
+PUT    /api/teams/:id
+DELETE /api/teams/:id
 GET    /api/tasks?teamId=&status=&search=&limit=&offset=&sort=
 GET    /api/tasks/:id
 POST   /api/tasks
 PUT    /api/tasks/:id
 PATCH  /api/tasks/:id/status
 DELETE /api/tasks/:id
+```
+
+## Exemplos de requests
+
+Use estes exemplos com o backend local rodando em `http://localhost:3000/api`.
+
+### Listar times
+
+```bash
+curl "http://localhost:3000/api/teams?limit=10&offset=0&search=eng"
+```
+
+### Criar time
+
+```bash
+curl -X POST "http://localhost:3000/api/teams" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Produto",
+    "colorHex": "#2563EB",
+    "description": "Time responsavel por descoberta e priorizacao."
+  }'
+```
+
+### Editar time
+
+```bash
+curl -X PUT "http://localhost:3000/api/teams/{teamId}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Produto e Design",
+    "colorHex": "#7C3AED",
+    "description": "Time responsavel por discovery, interface e priorizacao."
+  }'
+```
+
+### Deletar time
+
+```bash
+curl -X DELETE "http://localhost:3000/api/teams/{teamId}"
+```
+
+### Listar tarefas com filtros, ordenacao e paginacao
+
+```bash
+curl "http://localhost:3000/api/tasks?teamId={teamId}&status=PENDING&search=api&limit=3&offset=0&sort=createdAt:desc"
+```
+
+### Criar tarefa
+
+```bash
+curl -X POST "http://localhost:3000/api/tasks" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Criar API REST",
+    "description": "Implementar CRUD de times e tarefas.",
+    "status": "PENDING",
+    "dueDate": "2026-07-01T12:00:00.000Z",
+    "teamIds": ["{teamId}"]
+  }'
+```
+
+### Alterar status
+
+```bash
+curl -X PATCH "http://localhost:3000/api/tasks/{taskId}/status" \
+  -H "Content-Type: application/json" \
+  -d '{ "status": "DONE" }'
 ```
 
 ## Como rodar
@@ -100,7 +198,8 @@ DELETE /api/tasks/:id
 Em outro terminal:
 
 ```bash
-cd /Users/daniel/Documents/management-api
+git clone https://github.com/dannyelgjl/management-api.git
+cd management-api
 nvm use
 docker compose up -d
 cp .env.example .env
@@ -115,7 +214,8 @@ npm run start:dev
 Neste projeto:
 
 ```bash
-cd /Users/daniel/Documents/management-app/managementApp
+git clone https://github.com/dannyelgjl/management-app.git
+cd management-app
 nvm use
 npm install
 bundle install
@@ -131,6 +231,8 @@ npm run ios:local
 - `npm run android`: compila e abre no Android Emulator.
 - `npm test`: roda testes.
 - `npm run lint`: roda ESLint.
+- `npm run env:local`: aplica ambiente local.
+- `npm run env:prod`: aplica ambiente de producao.
 
 ## Modelo de dados consumido
 
@@ -156,8 +258,6 @@ Uma tarefa pode ter zero, um ou varios times. Ao enviar o formulario, `teamIds` 
 ## O que faria diferente em producao
 
 - Autenticacao e controle por usuario/organizacao.
-- Configuracao de ambiente para trocar API base URL por build.
-- Persistencia offline e fila de sincronizacao.
 - Optimistic updates em acoes de status.
 - Observabilidade de erros com Sentry ou similar.
 - Testes de componentes cobrindo fluxos de formulario e filtros.
