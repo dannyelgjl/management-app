@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { fireEvent, screen } from '@testing-library/react-native';
 
-import { TeamChip } from '../../../src/components/TeamChip';
+import { TeamChip, getTeamChipStyle } from '../../../src/components/TeamChip';
 import { Team } from '../../../src/services/types';
 import { renderComponent } from '../../../test-utils/renderComponent';
 
@@ -37,5 +37,20 @@ describe('TeamChip', () => {
     fireEvent.press(screen.getByRole('button'));
 
     expect(onPress).toHaveBeenCalledTimes(1);
+  });
+
+  it('applies selected and pressed styles when interactive', async () => {
+    await renderComponent(<TeamChip team={team} selected onPress={jest.fn()} />);
+    const chip = screen.getByRole('button');
+    const flattenedChipStyle = StyleSheet.flatten(chip.props.style);
+    const pressedStyle = StyleSheet.flatten(getTeamChipStyle({ pressed: true }, true));
+    const labelStyle = screen.getByText('Engenharia').props.style;
+
+    fireEvent(chip, 'pressIn');
+
+    expect(flattenedChipStyle.borderColor).toBeTruthy();
+    expect(pressedStyle).toEqual(expect.objectContaining({ opacity: 0.75 }));
+    expect(chip).toBeTruthy();
+    expect(labelStyle).toEqual(expect.arrayContaining([expect.any(Object)]));
   });
 });

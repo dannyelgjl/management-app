@@ -36,6 +36,7 @@ describe('date utils', () => {
   it('validates date input values in day-month-year order', () => {
     expect(isDateInputValid('01-07-2026')).toBe(true);
     expect(isDateInputValid('2026-07-01')).toBe(false);
+    expect(isDateInputValid('99-99-9999')).toBe(false);
     expect(isDateInputValid('31-02-2026')).toBe(false);
     expect(isDateInputValid('')).toBe(true);
   });

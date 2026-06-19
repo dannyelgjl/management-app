@@ -16,4 +16,15 @@ describe('Skeleton', () => {
       ]),
     );
   });
+
+  it('uses default dimensions when none are provided', async () => {
+    await renderComponent(<Skeleton />);
+    const skeleton = screen.getByRole('progressbar');
+
+    expect(skeleton.props.style).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ borderRadius: 8, height: 16, width: '100%' }),
+      ]),
+    );
+  });
 });
