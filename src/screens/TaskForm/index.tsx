@@ -1,21 +1,77 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import { Controller } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Button } from '../../components/Button';
+import { FilterChip } from '../../components/FilterChip';
+import { Input } from '../../components/Input';
+import { Skeleton } from '../../components/Skeleton';
 import { TeamChip } from '../../components/TeamChip';
-import { colors } from '../../theme';
+import { maskDateInput } from '../../utils/date';
 import { styles } from './styles';
 import { useContainer } from './useContainer';
+
+function FieldSkeleton({ multiline = false }: { multiline?: boolean }) {
+  return (
+    <View style={styles.field}>
+      <Skeleton width={82} height={13} />
+      <Skeleton height={multiline ? 110 : 46} />
+    </View>
+  );
+}
+
+function FormSkeleton() {
+  return (
+    <>
+      <View style={styles.heroPanel}>
+        <Skeleton width={82} height={13} />
+        <Skeleton width="62%" height={34} />
+        <View style={styles.heroMetaRow}>
+          <Skeleton width={94} height={34} borderRadius={999} />
+          <Skeleton width={78} height={34} borderRadius={999} />
+        </View>
+      </View>
+
+      <View style={styles.sectionCard}>
+        <Skeleton width={120} height={18} />
+        <FieldSkeleton />
+        <FieldSkeleton multiline />
+        <FieldSkeleton />
+      </View>
+
+      <View style={styles.sectionCard}>
+        <Skeleton width={62} height={18} />
+        <View style={styles.statusRow}>
+          <Skeleton width={88} height={36} borderRadius={999} />
+          <Skeleton width={112} height={36} borderRadius={999} />
+          <Skeleton width={96} height={36} borderRadius={999} />
+        </View>
+      </View>
+
+      <View style={styles.sectionCard}>
+        <Skeleton width={52} height={18} />
+        <TeamSkeleton />
+      </View>
+    </>
+  );
+}
+
+function TeamSkeleton() {
+  return (
+    <View style={styles.teamGrid}>
+      <Skeleton width={96} height={34} borderRadius={999} />
+      <Skeleton width={118} height={34} borderRadius={999} />
+      <Skeleton width={86} height={34} borderRadius={999} />
+    </View>
+  );
+}
 
 const TaskForm = () => {
   const {
@@ -25,12 +81,15 @@ const TaskForm = () => {
     isLoading,
     isBusy,
     selectedTeamIds,
+    selectedStatusLabel,
+    selectedTeamsLabel,
     selectedStatus,
     teams,
     teamsLoading,
     hasMutationError,
     statusOptions,
     goBack,
+    goToCreateTeam,
     selectStatus,
     toggleTeam,
     submit,
@@ -42,114 +101,121 @@ const TaskForm = () => {
         style={styles.keyboard}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          <View style={styles.topBar}>
-            <Pressable onPress={goBack} style={styles.backButton}>
-              <Text style={styles.backButtonText}>Voltar</Text>
-            </Pressable>
-            <Text style={styles.modeLabel}>{isEditing ? 'Editar' : 'Nova tarefa'}</Text>
-          </View>
-
           {isLoading ? (
-            <View style={styles.centerBox}>
-              <ActivityIndicator color={colors.brand.primary} />
-            </View>
+            <FormSkeleton />
           ) : (
-            <View style={styles.formCard}>
-              <View style={styles.field}>
-                <Text style={styles.label}>Titulo</Text>
-                <Controller
-                  control={control}
-                  name="title"
-                  render={({ field: { onBlur, onChange, value } }) => (
-                    <TextInput
-                      value={value}
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      placeholder="Ex.: Revisar fluxo de tarefas"
-                      placeholderTextColor={colors.text.placeholder}
-                      style={[styles.input, errors.title && styles.inputError]}
-                    />
-                  )}
-                />
-                {errors.title ? (
-                  <Text style={styles.errorText}>{errors.title.message}</Text>
-                ) : null}
+            <>
+              <View style={styles.heroPanel}>
+                <View style={styles.heroTopRow}>
+                  <Text style={styles.heroEyebrow}>
+                    {isEditing ? 'Edição' : 'Cadastro'}
+                  </Text>
+                  <Button
+                    title="Voltar"
+                    onPress={goBack}
+                    variant="outline"
+                    size="small"
+                    fitContent
+                    style={styles.heroBackButton}
+                    textStyle={styles.heroBackButtonText}
+                  />
+                </View>
+
+                <Text style={styles.heroTitle}>
+                  {isEditing ? 'Editar tarefa' : 'Nova tarefa'}
+                </Text>
+
+                <View style={styles.heroMetaRow}>
+                  <Text style={styles.heroMeta}>{selectedStatusLabel}</Text>
+                  <Text style={styles.heroMeta}>{selectedTeamsLabel}</Text>
+                </View>
               </View>
 
-              <View style={styles.field}>
-                <Text style={styles.label}>Descricao</Text>
-                <Controller
-                  control={control}
-                  name="description"
-                  render={({ field: { onBlur, onChange, value } }) => (
-                    <TextInput
-                      value={value}
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      placeholder="Detalhes da tarefa"
-                      placeholderTextColor={colors.text.placeholder}
-                      multiline
-                      textAlignVertical="top"
-                      style={[styles.input, styles.textArea]}
-                    />
-                  )}
-                />
-                {errors.description ? (
-                  <Text style={styles.errorText}>{errors.description.message}</Text>
-                ) : null}
+              <View style={styles.sectionCard}>
+                <Text style={styles.sectionTitle}>Dados principais</Text>
+
+                <View style={styles.field}>
+                  <Controller
+                    control={control}
+                    name="title"
+                    render={({ field: { onBlur, onChange, value } }) => (
+                      <Input
+                        label="Título"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        placeholder="Ex.: Revisar fluxo de tarefas"
+                        error={errors.title?.message}
+                      />
+                    )}
+                  />
+                </View>
+
+                <View style={styles.field}>
+                  <Controller
+                    control={control}
+                    name="description"
+                    render={({ field: { onBlur, onChange, value } }) => (
+                      <Input
+                        label="Descrição"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        placeholder="Detalhes da tarefa"
+                        multiline
+                        error={errors.description?.message}
+                      />
+                    )}
+                  />
+                </View>
+
+                <View style={styles.field}>
+                  <Controller
+                    control={control}
+                    name="dueDate"
+                    render={({ field: { onBlur, onChange, value } }) => (
+                      <Input
+                        label="Prazo"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={(text) => onChange(maskDateInput(text))}
+                        placeholder="DD-MM-AAAA"
+                        keyboardType="numbers-and-punctuation"
+                        maxLength={10}
+                        error={errors.dueDate?.message}
+                      />
+                    )}
+                  />
+                </View>
               </View>
 
-              <View style={styles.field}>
-                <Text style={styles.label}>Prazo</Text>
-                <Controller
-                  control={control}
-                  name="dueDate"
-                  render={({ field: { onBlur, onChange, value } }) => (
-                    <TextInput
-                      value={value}
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      placeholder="YYYY-MM-DD"
-                      placeholderTextColor={colors.text.placeholder}
-                      keyboardType="numbers-and-punctuation"
-                      style={[styles.input, errors.dueDate && styles.inputError]}
-                    />
-                  )}
-                />
-                {errors.dueDate ? (
-                  <Text style={styles.errorText}>{errors.dueDate.message}</Text>
-                ) : null}
-              </View>
-
-              <View style={styles.field}>
-                <Text style={styles.label}>Status</Text>
+              <View style={styles.sectionCard}>
+                <Text style={styles.sectionTitle}>Status</Text>
                 <View style={styles.statusRow}>
                   {statusOptions.map((option) => (
-                    <Pressable
+                    <FilterChip
                       key={option.value}
+                      label={option.label}
+                      selected={selectedStatus === option.value}
                       onPress={() => selectStatus(option.value)}
-                      style={({ pressed }) => [
-                        styles.statusButton,
-                        selectedStatus === option.value && styles.statusButtonActive,
-                        pressed && styles.pressed,
-                      ]}>
-                      <Text
-                        style={[
-                          styles.statusButtonText,
-                          selectedStatus === option.value &&
-                            styles.statusButtonTextActive,
-                        ]}>
-                        {option.label}
-                      </Text>
-                    </Pressable>
+                    />
                   ))}
                 </View>
               </View>
 
-              <View style={styles.field}>
-                <Text style={styles.label}>Times</Text>
+              <View style={styles.sectionCard}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionTitle}>Times</Text>
+                  <Button
+                    title="Novo time"
+                    onPress={goToCreateTeam}
+                    variant="link"
+                    size="compact"
+                    fitContent
+                  />
+                </View>
                 {teamsLoading ? (
-                  <ActivityIndicator color={colors.brand.primary} />
+                  <TeamSkeleton />
                 ) : (
                   <View style={styles.teamGrid}>
                     {teams.map((team) => (
@@ -163,30 +229,26 @@ const TaskForm = () => {
                   </View>
                 )}
               </View>
-
-              {hasMutationError ? (
-                <View style={styles.errorBox}>
-                  <Text style={styles.errorBoxText}>
-                    Nao foi possivel salvar. Confira os dados e tente novamente.
-                  </Text>
-                </View>
-              ) : null}
-
-              <Pressable
-                disabled={isBusy}
-                onPress={submit}
-                style={({ pressed }) => [
-                  styles.primaryButton,
-                  pressed && styles.pressed,
-                  isBusy && styles.disabled,
-                ]}>
-                <Text style={styles.primaryButtonText}>
-                  {isBusy ? 'Salvando...' : 'Salvar tarefa'}
-                </Text>
-              </Pressable>
-            </View>
+            </>
           )}
         </ScrollView>
+
+        <View style={styles.footer}>
+          {hasMutationError ? (
+            <View style={styles.errorBox}>
+              <Text style={styles.errorBoxText}>
+                Não foi possível salvar. Confira os dados e tente novamente.
+              </Text>
+            </View>
+          ) : null}
+
+          <Button
+            title={isEditing ? 'Salvar alterações' : 'Criar tarefa'}
+            disabled={isBusy || isLoading}
+            loading={isBusy}
+            onPress={submit}
+          />
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

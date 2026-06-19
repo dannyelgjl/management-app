@@ -3,30 +3,10 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../theme';
 
 export const styles = StyleSheet.create({
-  backButton: {
-    paddingVertical: 8,
-  },
-  backButtonText: {
-    color: colors.brand.link,
-    fontSize: 15,
-    fontWeight: '900',
-  },
-  centerBox: {
-    alignItems: 'center',
-    backgroundColor: colors.surface.card,
-    borderColor: colors.border.default,
-    borderRadius: 8,
-    borderWidth: 1,
-    minHeight: 180,
-    justifyContent: 'center',
-  },
   content: {
-    gap: 16,
+    gap: 14,
     padding: 16,
-    paddingBottom: 32,
-  },
-  disabled: {
-    opacity: 0.55,
+    paddingBottom: 18,
   },
   errorBox: {
     backgroundColor: colors.danger.background,
@@ -41,90 +21,96 @@ export const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 18,
   },
-  errorText: {
-    color: colors.danger.validation,
-    fontSize: 12,
-    fontWeight: '700',
-  },
   field: {
+    gap: 9,
+  },
+  footer: {
+    backgroundColor: colors.surface.app,
+    borderTopColor: colors.border.default,
+    borderTopWidth: 1,
+    gap: 10,
+    padding: 16,
+    paddingTop: 12,
+  },
+  heroBackButton: {
+    backgroundColor: colors.surface.overlay,
+    borderColor: colors.border.onDark,
+  },
+  heroBackButtonText: {
+    color: colors.text.inverted,
+  },
+  heroEyebrow: {
+    color: colors.neutral[200],
+    fontSize: 12,
+    fontWeight: '800',
+    textTransform: 'uppercase',
+  },
+  heroMeta: {
+    backgroundColor: colors.surface.overlay,
+    borderColor: colors.border.onDark,
+    borderRadius: 999,
+    borderWidth: 1,
+    color: colors.text.inverted,
+    fontSize: 12,
+    fontWeight: '800',
+    minHeight: 34,
+    overflow: 'hidden',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  heroMetaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
   },
-  formCard: {
-    backgroundColor: colors.surface.card,
-    borderColor: colors.border.default,
+  heroPanel: {
+    backgroundColor: colors.surface.hero,
     borderRadius: 8,
-    borderWidth: 1,
-    gap: 16,
-    padding: 16,
+    gap: 14,
+    padding: 18,
   },
-  input: {
-    backgroundColor: colors.surface.card,
-    borderColor: colors.border.strong,
-    borderRadius: 8,
-    borderWidth: 1,
-    color: colors.text.primary,
-    fontSize: 15,
-    minHeight: 46,
-    paddingHorizontal: 12,
+  heroTitle: {
+    color: colors.text.inverted,
+    fontSize: 30,
+    fontWeight: '900',
+    letterSpacing: 0,
+    lineHeight: 36,
   },
-  inputError: {
-    borderColor: colors.danger.inputBorder,
+  heroTopRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'space-between',
   },
   keyboard: {
     flex: 1,
-  },
-  label: {
-    color: colors.text.primary,
-    fontSize: 13,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  modeLabel: {
-    color: colors.text.primary,
-    fontSize: 18,
-    fontWeight: '900',
-  },
-  pressed: {
-    opacity: 0.75,
-  },
-  primaryButton: {
-    alignItems: 'center',
-    backgroundColor: colors.brand.primary,
-    borderRadius: 8,
-    justifyContent: 'center',
-    minHeight: 48,
-  },
-  primaryButtonText: {
-    color: colors.text.inverted,
-    fontSize: 15,
-    fontWeight: '900',
   },
   safeArea: {
     backgroundColor: colors.surface.app,
     flex: 1,
   },
-  statusButton: {
-    alignItems: 'center',
+  sectionCard: {
     backgroundColor: colors.surface.card,
     borderColor: colors.border.default,
     borderRadius: 8,
     borderWidth: 1,
-    flexGrow: 1,
-    minHeight: 38,
-    paddingHorizontal: 10,
-    justifyContent: 'center',
+    elevation: 1,
+    gap: 16,
+    padding: 18,
+    shadowColor: colors.shadow.card,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 12,
   },
-  statusButtonActive: {
-    backgroundColor: colors.brand.subtle,
-    borderColor: colors.brand.link,
+  sectionHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  statusButtonText: {
-    color: colors.text.body,
-    fontSize: 12,
+  sectionTitle: {
+    color: colors.text.primary,
+    fontSize: 16,
     fontWeight: '900',
-  },
-  statusButtonTextActive: {
-    color: colors.brand.linkStrong,
   },
   statusRow: {
     flexDirection: 'row',
@@ -135,14 +121,5 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-  },
-  textArea: {
-    minHeight: 110,
-    paddingTop: 12,
-  },
-  topBar: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 });
