@@ -20,6 +20,7 @@ export function TeamChip({ team, selected = false, onPress }: TeamChipProps) {
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => [
         styles.container,
